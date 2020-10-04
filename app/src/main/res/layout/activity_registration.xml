@@ -22,39 +22,40 @@
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
-        android:layout_width="274dp"
-        android:layout_height="46dp"
+        android:layout_width="357dp"
+        android:layout_height="40dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.277"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.356" />
+        app:layout_constraintVertical_bias="0.2" />
 
     <EditText
         android:id="@+id/editTextTextPassword"
-        android:layout_width="269dp"
-        android:layout_height="50dp"
+        android:layout_width="365dp"
+        android:layout_height="44dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintHorizontal_bias="0.246"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintVertical_bias="0.127" />
+        app:layout_constraintVertical_bias="0.052" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="301dp"
-        android:layout_height="94dp"
+        android:layout_width="296dp"
+        android:layout_height="60dp"
         android:fontFamily="sans-serif-black"
-        android:text="@string/please_login_to_healthchat"
+        android:text="Registration"
 
+        android:textAlignment="textStart"
         android:textSize="36sp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddress"
@@ -62,29 +63,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/section_label"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.709" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="145dp"
-        android:layout_height="43dp"
-        android:text="Login"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
-        app:layout_constraintVertical_bias="0.151" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="140dp"
-        android:layout_height="42dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button"
-        app:layout_constraintVertical_bias="0.109" />
+        app:layout_constraintVertical_bias="0.342" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
