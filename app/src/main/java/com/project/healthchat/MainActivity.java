@@ -2,7 +2,10 @@ package com.project.healthchat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +17,8 @@ public class MainActivity extends AppCompatActivity {
     Button findHospitalBtn;
     Button statisticsBtn;
     Button chatbotsBtn;
-
+    View parentView;
+    private BroadcastReceiver receiver = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +27,10 @@ public class MainActivity extends AppCompatActivity {
         findHospitalBtn = findViewById(R.id.findHospitalBtn);
         statisticsBtn   = findViewById(R.id.statistics);
         chatbotsBtn     =  findViewById(R.id.chatbot);
+        parentView      = findViewById(R.id.mainActivityLayout);
 
+        receiver        = new Receiver(parentView);
+        broadcastIntent();
 
         statisticsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,5 +50,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void broadcastIntent(){
+        registerReceiver(receiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
     }
 }

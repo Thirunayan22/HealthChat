@@ -3,7 +3,12 @@ package com.project.healthchat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -12,6 +17,7 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,6 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.math.RoundingMode;
+import java.sql.Array;
 import java.text.DecimalFormat;
 
 public class StatisticsActivity extends AppCompatActivity {
@@ -39,11 +47,18 @@ public class StatisticsActivity extends AppCompatActivity {
     private Button localBtn;
     private Button globalBtn;
 
+    View parentView;
+
+    private BroadcastReceiver receiver = null;
+    boolean isConnected = true;
+    private boolean monitoringActivity = false;
     String url ="https://hpb.health.gov.lk/api/get-current-statistical";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
+        Context context = this;
+
 
         moveBack = findViewById(R.id.statMoveBack);
         infectedTV = findViewById(R.id.totalInfectedCount);
@@ -52,6 +67,11 @@ public class StatisticsActivity extends AppCompatActivity {
 
         localBtn = findViewById(R.id.localBtn);
         globalBtn = findViewById(R.id.globalBtn);
+
+        parentView = findViewById(R.id.statisticsActivityLayout);
+
+        receiver = new Receiver(parentView);
+        broadcastIntent();
 
 
         JsonObjectRequest objectRequest = makeSlHealthApiRequest(infectedTV,deceasedTV,recoveredTV,"local");
@@ -98,6 +118,17 @@ public class StatisticsActivity extends AppCompatActivity {
 
     }
 
+    public void broadcastIntent(){
+        registerReceiver(receiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+
+    }
+
     private JsonObjectRequest  makeSlHealthApiRequest(final TextView totalInfected , final TextView totalDeath , final TextView totalRecovered, final String region){
         /*
         PARAM :
@@ -108,7 +139,7 @@ public class StatisticsActivity extends AppCompatActivity {
               */
         final int million = 1000000;
         final int hundredThousand  = 100000;
-        final DecimalFormat df = new DecimalFormat("0.00");
+        final DecimalFormat formatter = new DecimalFormat("#,###,###");
 
         final JSONObject[] finalResponse = new JSONObject[1];
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -131,55 +162,65 @@ public class StatisticsActivity extends AppCompatActivity {
 
 
                         if((totalLocalDeaths > million)){
+                            String locDeathFraction = calculateFraction(totalLocalDeaths,million) + "M";
+                            totalDeath.setText(locDeathFraction);
 
-                            String totalLocDeaths = Float.toString(Math.round(totalLocalDeaths/million)) + "M";
-                            totalDeath.setText(totalLocDeaths);
                         }else{
-                            totalDeath.setText(String.valueOf(totalLocalRecoveries));
+                            String locDeath = formatter.format(totalLocalDeaths);
+                            totalDeath.setText(locDeath);
                         }
 
                         if((totalLocalActiveCases > million)){
-                            String totalLocActiveCases = Float.toString(Math.round(totalLocalActiveCases/million)) + "M";
-                            totalInfected.setText(totalLocActiveCases);
+                            String locActiveCasesFraction = calculateFraction(totalLocalActiveCases,million)+ "M";
+                            totalInfected.setText(locActiveCasesFraction);
 
                         }else{
-                            totalInfected.setText(String.valueOf(totalLocalActiveCases));
+
+                            String locActiveCases = formatter.format(totalLocalActiveCases);
+                            totalInfected.setText(locActiveCases);
 
                         }
 
                         if((totalLocalRecoveries > million) ){
-                            String totalLocRecoveries =  Float.toString(Math.round(totalLocalRecoveries/million)) + "M";
-                            totalRecovered.setText(totalLocRecoveries);
+                            String locRecoveriesFraction =  calculateFraction(totalLocalRecoveries,million) + "M";
+                            totalRecovered.setText(locRecoveriesFraction);
 
                         }else{
-                            totalRecovered.setText(String.valueOf(totalLocalDeaths));
+                            String locRecoveries = formatter.format(totalLocalRecoveries);
+                            totalRecovered.setText(locRecoveries);
                         }
 
                     }
                     else if(region == "global"){
 
                         if(totalGlobalActiveCases > million ){
-                            String totalGlobCases  = Float.toString(Math.round(totalGlobalActiveCases/million)) + "M";
-                            totalInfected.setText(totalGlobCases);
+                            String globalCasesFraction  = calculateFraction(totalGlobalActiveCases,million) + "M";
+                            totalInfected.setText(globalCasesFraction);
 
                         }else{
-                        totalInfected.setText(String.valueOf(totalGlobalActiveCases));
+                            String globalCases = formatter.format(totalGlobalActiveCases);
+                        totalInfected.setText(globalCases);
                         }
 
                         if(totalGlobalDeaths > million){
-                            String totalGlobDeaths = Float.toString(Math.round(totalGlobalDeaths/million)) + "M";
-                            totalDeath.setText(totalGlobDeaths);
+                            String globalDeathsFraction = calculateFraction(totalGlobalDeaths,million) + "M";
+                            totalDeath.setText(globalDeathsFraction);
+
 
                         }else{
-                            totalDeath.setText(String.valueOf(totalGlobalDeaths));
+                            String globalDeaths = formatter.format(totalGlobalDeaths);
+                            totalDeath.setText(globalDeaths);
+
                         }
 
                         if(totalGlobalRecoveries > million){
-                            String totalGlobRecoveries = Float.toString(Math.round(totalGlobalRecoveries/million))+ "M";
-                            totalRecovered.setText(totalGlobRecoveries);
+                            String globalRecoveriesFraction = calculateFraction(totalGlobalRecoveries,million)+ "M";
+                            totalRecovered.setText(globalRecoveriesFraction);
                         }
                         else{
-                        totalRecovered.setText(String.valueOf(totalGlobalRecoveries));
+                            String recoveriesFraction = formatter.format(totalGlobalRecoveries);
+                            totalRecovered.setText(recoveriesFraction);
+
                         }
                     }
 
@@ -210,5 +251,11 @@ public class StatisticsActivity extends AppCompatActivity {
         return jsonObjectRequest;
 
 
+    }
+
+    private float calculateFraction(long number , long divisor){
+        long truncate =  (number * 10L + (divisor/2L))/divisor;
+        float fraction  = (float) truncate * 0.10F;
+        return fraction;
     }
 }

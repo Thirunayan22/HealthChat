@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">HealthChat</string>
+    <string name="device_offline">Device Offline</string>
+    <string name="device_online">Device Online</string>>
 </resources>
