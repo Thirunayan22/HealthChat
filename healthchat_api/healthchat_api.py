@@ -41,7 +41,7 @@ def chat_response():
   if(request.method == "POST"):
     text_message = [request.args.get('text')]
     print("Passed value : " + str(text_message[0]))
-    print("Passed value type : " + str(type(text_message)))
+    print("Passed value type : " + str(type(text_message[0])))
 
     question_encodings = module.signatures['question_encoder'](
       tf.constant(preprocess_sentences(text_message))
