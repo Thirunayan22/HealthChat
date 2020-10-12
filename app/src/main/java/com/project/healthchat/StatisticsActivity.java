@@ -110,7 +110,8 @@ public class StatisticsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent moveBackIntent = new Intent(StatisticsActivity.this,MainActivity.class);
-                finish();
+                startActivity(moveBackIntent);
+              finish();
             }
         });
 

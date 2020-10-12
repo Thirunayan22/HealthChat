@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chatBotActivityLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -49,11 +50,17 @@
         android:layout_below="@+id/dark_divider"
         tools:itemCount="20"
         tools:listitem="@layout/message_sent_bubble" />
+
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:background="#42A5F5"
         android:id="@+id/dark_divider"/>
+
+
+
 
 
 </RelativeLayout>

@@ -4,6 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,7 +35,9 @@ public class chatBot extends AppCompatActivity {
     List<ResponseMessage> responseMessagesList;
     final static  String URL = "https://6775853bd3cf.ngrok.io/chat?text=";
     public String botreply;
+    private BroadcastReceiver receiver = null;
 
+    View parentView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +46,18 @@ public class chatBot extends AppCompatActivity {
         editText = findViewById(R.id.et_message);
         sendBtn = findViewById(R.id.btn_send);
         recyclerView = findViewById(R.id.rv_messages);
+        parentView = findViewById(R.id.chatBotActivityLayout);
 
         responseMessagesList = new ArrayList<>();
         messageAdapter  = new MessageAdapter(responseMessagesList,this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         recyclerView.setAdapter(messageAdapter);
+
+        receiver = new Receiver(parentView);
+        broadcastIntent();
+
+
 
         ResponseMessage starter = new ResponseMessage("Hi,how are you feeling today?",false);
         responseMessagesList.add(starter);
@@ -55,25 +67,26 @@ public class chatBot extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                editText.setText("");
                 String  message = editText.getText().toString();
                 ResponseMessage responseMessage = new ResponseMessage(editText.getText().toString(),true);
                 responseMessagesList.add(responseMessage);
+                messageAdapter.notifyDataSetChanged();
+                editText.setText("");
+
                 sendRequest(URL,message);
-
-
-
-
-
 
             }
         });
-;
 
+    }
+    @Override
+    protected void onPause() {
+        unregisterReceiver(receiver);
+        Intent pauseIntent = new Intent(this, MainActivity.class);
+        startActivity(pauseIntent);
+        finish();
 
-
-
-
+        super.onPause();
 
     }
 
@@ -96,6 +109,7 @@ public class chatBot extends AppCompatActivity {
 
 
     }
+
 
     private String sendRequest(String url,final String message){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -131,5 +145,8 @@ public class chatBot extends AppCompatActivity {
 
         requestQueue.add(stringRequest);
         return botreply;
+    }
+    public void broadcastIntent(){
+        registerReceiver(receiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 }

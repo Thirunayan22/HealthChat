@@ -41,12 +41,5 @@ public class Receiver extends BroadcastReceiver {
             snackbar.show();
         }
 
-
-
-
-
-
-        Toast toast = Toast.makeText(context,status,Toast.LENGTH_LONG);
-        toast.show();
     }
 }
