@@ -40,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        chatbotsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent chatIntent  = new Intent(MainActivity.this,chatBot.class);
+                startActivity(chatIntent);
+            }
+        });
+
         findHospitalBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
