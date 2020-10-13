@@ -59,6 +59,7 @@ public class chatBot extends AppCompatActivity {
 
 
 
+
         ResponseMessage starter = new ResponseMessage("Hi,how are you feeling today?",false);
         responseMessagesList.add(starter);
         messageAdapter.notifyDataSetChanged();
@@ -74,7 +75,6 @@ public class chatBot extends AppCompatActivity {
                 editText.setText("");
 
                 sendRequest(URL,message);
-
             }
         });
 

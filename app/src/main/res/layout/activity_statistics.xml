@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF"
+    android:background="#eee"
+
     tools:context=".StatisticsActivity">
 
     <androidx.cardview.widget.CardView
@@ -144,50 +145,58 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/statMoveBack" />
 
-    <Button
-        android:id="@+id/localBtn"
-        android:layout_width="0dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="4dp"
-        android:background="@drawable/selected_area_button"
-        android:text="Sri Lanka"
-        android:textAllCaps="false"
-        android:textColor="#FFF"
-        app:layout_constraintEnd_toStartOf="@+id/globalBtn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <Button
-        android:id="@+id/globalBtn"
-        android:layout_width="0dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/non_selected_area_background"
-        android:text="Global"
-        android:textAllCaps="false"
-        android:textColor="#111111"
-        app:layout_constraintBottom_toBottomOf="@+id/localBtn"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="20dp"
+
+        android:background="@drawable/spinner_bg"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/localBtn"
-        app:layout_constraintTop_toTopOf="@+id/localBtn" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <ImageView
+            android:id="@+id/flag"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            app:srcCompat="@drawable/india"
+
+            />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginTop="12dp"
+            android:entries="@array/list"
+            android:textAlignment="center"
+            android:spinnerMode="dialog"
+            android:layout_marginBottom="12dp" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="234dp"
         android:layout_height="20dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="28dp"
         android:fontFamily="@font/graphiksemibold"
         android:text="Total"
         android:textAlignment="center"
         android:textColor="#111111"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/localBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"

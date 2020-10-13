@@ -14,8 +14,11 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,11 +46,12 @@ public class StatisticsActivity extends AppCompatActivity {
     private TextView infectedTV;
     private TextView deceasedTV;
     private TextView recoveredTV;
+    private ImageView flag;
 
-    private Button localBtn;
-    private Button globalBtn;
+    Spinner spinner;
 
     View parentView;
+
 
     private BroadcastReceiver receiver = null;
     boolean isConnected = true;
@@ -65,8 +69,14 @@ public class StatisticsActivity extends AppCompatActivity {
         deceasedTV  = findViewById(R.id.totalDeathCount);
         recoveredTV = findViewById(R.id.totalRecovered);
 
-        localBtn = findViewById(R.id.localBtn);
-        globalBtn = findViewById(R.id.globalBtn);
+        flag = findViewById(R.id.flag);
+
+        spinner = findViewById(R.id.spinner);
+
+        spinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,getResources().getStringArray(R.array.list)));
+
+//        localBtn = findViewById(R.id.localBtn);
+//        globalBtn = findViewById(R.id.globalBtn);
 
         parentView = findViewById(R.id.statisticsActivityLayout);
 
@@ -74,35 +84,40 @@ public class StatisticsActivity extends AppCompatActivity {
         broadcastIntent();
 
 
-        JsonObjectRequest objectRequest = makeSlHealthApiRequest(infectedTV,deceasedTV,recoveredTV,"local");
-
-        localBtn.setOnClickListener(new View.OnClickListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                localBtn.setTextColor(getResources().getColor(R.color.white));
-                localBtn.setBackgroundResource(R.drawable.selected_area_button);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                globalBtn.setTextColor(getResources().getColor(R.color.black));
-                globalBtn.setBackgroundResource(R.drawable.non_selected_area_background);
+                        String selected_item = parent.getSelectedItem().toString();
+                        flag.setImageResource(CountryData.countryFlag[spinner.getSelectedItemPosition()]);
+                        Log.e("Selected item ",selected_item);
 
-                JsonObjectRequest localObjectRequest = makeSlHealthApiRequest(infectedTV,deceasedTV,recoveredTV,"local");
+                        if(selected_item.equals("Global")){
+                            Log.e("make request","making request");
+                            JsonObjectRequest globalObjectRequest   = makeSlHealthApiRequest(infectedTV,deceasedTV,recoveredTV,"global");
+
+                        }
+
+                        else if(selected_item.equals("Sri Lanka")){
+                            JsonObjectRequest globalObjectRequest   = makeSlHealthApiRequest(infectedTV,deceasedTV,recoveredTV,"local");
+
+                        }
+
+                        else{
+                            Log.e("Do nothing ","do nothing");
+                        }
+
+
+
             }
-        });
 
-        globalBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                globalBtn.setTextColor(getResources().getColor(R.color.white));
-                globalBtn.setBackgroundResource(R.drawable.selected_area_button);
-
-                localBtn.setTextColor(getResources().getColor(R.color.black));
-                localBtn.setBackgroundResource(R.drawable.non_selected_area_background);
-
+            public void onNothingSelected(AdapterView<?> parent) {
                 JsonObjectRequest globalObjectRequest   = makeSlHealthApiRequest(infectedTV,deceasedTV,recoveredTV,"global");
 
+
             }
         });
-
 
 
 
@@ -127,7 +142,9 @@ public class StatisticsActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
-
+        Intent moveBackIntent  = new Intent(this,MainActivity.class);
+        startActivity(moveBackIntent);
+        finish();
     }
 
     private JsonObjectRequest  makeSlHealthApiRequest(final TextView totalInfected , final TextView totalDeath , final TextView totalRecovered, final String region){
