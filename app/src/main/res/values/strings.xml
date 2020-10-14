@@ -5,203 +5,26 @@
 
     <string-array name="list">
         <item>Global</item>
-        <item>abkhazia</item>
-        <item>afghanistan</item>
-        <item>albania</item>
-        <item>algeria</item>
-        <item>andorra</item>
-        <item>angola</item>
-        <item>anguilla</item>
-        <item>argentina</item>
-        <item>armenia</item>
-        <item>aruba</item>
-        <item>australia</item>
-        <item>austria</item>
-        <item>azerbaijan</item>
-        <item>bahamas</item>
-        <item>bahrain</item>
-        <item>bangladesh</item>
-        <item>barbados</item>
-        <item>belarus</item>
-        <item>belgium</item>
-        <item>belize</item>
-        <item>benin</item>
-        <item>bermuda</item>
-        <item>bhutan-1</item>
-        <item>bhutan</item>
-        <item>bolivia</item>
-        <item>bonaire</item>
-        <item>botswana</item>
-        <item>brazil</item>
-        <item>brunei</item>
-        <item>bulgaria</item>
-        <item>burundi</item>
-        <item>cambodia</item>
-        <item>cameroon</item>
-        <item>canada</item>
-        <item>ceuta</item>
-        <item>chad</item>
-        <item>chile</item>
-        <item>china</item>
-        <item>colombia</item>
-        <item>comoros</item>
-        <item>corsica</item>
-        <item>croatia</item>
-        <item>cuba</item>
-        <item>curacao</item>
-        <item>cyprus</item>
-        <item>denmark</item>
-        <item>djibouti</item>
-        <item>dominica</item>
-        <item>ecuador</item>
-        <item>egypt</item>
-        <item>england</item>
-        <item>eritrea</item>
-        <item>estonia</item>
-        <item>ethiopia</item>
-        <item>fiji</item>
-        <item>finland</item>
-        <item>france</item>
-        <item>gabon</item>
-        <item>gambia</item>
-        <item>georgia</item>
-        <item>germany</item>
-        <item>ghana</item>
-        <item>gibraltar</item>
-        <item>greece</item>
-        <item>greenland</item>
-        <item>grenada</item>
-        <item>guam</item>
-        <item>guatemala</item>
-        <item>guernsey</item>
-        <item>guinea</item>
-        <item>guyana</item>
-        <item>haiti</item>
-        <item>hawaii</item>
-        <item>honduras</item>
-        <item>hungary</item>
-        <item>iceland</item>
-        <item>india</item>
-        <item>indonesia</item>
-        <item>iran</item>
-        <item>iraq</item>
-        <item>ireland</item>
-        <item>israel</item>
-        <item>italy</item>
-        <item>jamaica</item>
-        <item>japan</item>
-        <item>jersey</item>
-        <item>jordan</item>
-        <item>kazakhstan</item>
-        <item>kenya</item>
-        <item>kiribati</item>
-        <item>kosovo</item>
-        <item>kuwait</item>
-        <item>kyrgyzstan</item>
-        <item>laos</item>
-        <item>latvia</item>
-        <item>lebanon</item>
-        <item>lesotho</item>
-        <item>liberia</item>
-        <item>libya</item>
-        <item>liechtenstein</item>
-        <item>lithuania</item>
-        <item>luxembourg</item>
-        <item>macao</item>
-        <item>madagascar</item>
-        <item>madeira</item>
-        <item>malawi</item>
-        <item>malaysia</item>
-        <item>maldives</item>
-        <item>mali</item>
-        <item>malta</item>
-        <item>martinique</item>
-        <item>mauritania</item>
-        <item>mauritius</item>
-        <item>melilla</item>
-        <item>mexico</item>
-        <item>micronesia</item>
-        <item>moldova</item>
-        <item>monaco</item>
-        <item>mongolia</item>
-        <item>montenegro</item>
-        <item>montserrat</item>
-        <item>morocco</item>
-        <item>mozambique</item>
-        <item>myanmar</item>
-        <item>namibia</item>
-        <item>nato</item>
-        <item>nauru</item>
-        <item>nepal</item>
-        <item>netherlands</item>
-        <item>newzealand</item>
-        <item>nicaragua</item>
-        <item>niger</item>
-        <item>nigeria</item>
-        <item>niue</item>
-        <item>norway</item>
-        <item>oman</item>
-        <item>ossetia</item>
-        <item>pakistan</item>
-        <item>palau</item>
-        <item>palestine</item>
-        <item>panama</item>
-        <item>paraguay</item>
-        <item>peru</item>
-        <item>philippines</item>
-        <item>portugal</item>
-        <item>qatar</item>
-        <item>romania</item>
-        <item>russia</item>
-        <item>rwanda</item>
-        <item>salvador</item>
-        <item>samoa</item>
-        <item>sardinia</item>
-        <item>scotland</item>
-        <item>senegal</item>
-        <item>serbia</item>
-        <item>seychelles</item>
-        <item>singapore</item>
-        <item>slovakia</item>
-        <item>slovenia</item>
-        <item>somalia</item>
-        <item>somaliland</item>
-        <item>spain</item>
-        <item>Sri Lanka</item>
-        <item>sudan</item>
-        <item>suriname</item>
-        <item>swaziland</item>
-        <item>sweden</item>
-        <item>switzerland</item>
-        <item>syria</item>
-        <item>taiwan</item>
-        <item>tajikistan</item>
-        <item>tanzania</item>
-        <item>thailand</item>
-        <item>tibet</item>
-        <item>togo</item>
-        <item>tokelau</item>
-        <item>tonga</item>
-        <item>transnistria</item>
-        <item>tunisia</item>
-        <item>turkey</item>
-        <item>turkmenistan</item>
-        <item>tuvalu</item>
-        <item>uganda</item>
-        <item>ukraine</item>
-        <item>united arab emirates</item>
-        <item>United Kingdom</item>
-        <item>United States Of America</item>
-        <item>uruguay</item>
-        <item>uzbekistn</item>
-        <item>vanuatu</item>
-        <item>venezuela</item>
-        <item>vietnam</item>
-        <item>wales</item>
-        <item>yemen</item>
-        <item>zambia</item>
-        <item>zimbabwe</item>
+        <item name = "Sri Lanka" iso_code="LKA">Sri Lanka</item>
+        <item name = "Spain" iso_code="ESP">Spain</item>
+        <item name = "United Kingdom" iso_code="GBR">United Kingdom</item>
+        <item name = "United States Of America" iso_code="USA">United States Of America</item>
+        <item name = "Wales" iso_code="GBR">Wales</item>
+        <item name = "Yemen" iso_code="YEM">Yemen</item>
+        <item name = "Zambia" iso_code="ZMB">Zambia</item>
+        <item name = "Zimbabwe" iso_code="ZWE">Zimbabwe</item>
+    </string-array>
 
+    <string-array name="iso_codes">
+        <item>Global</item>
+        <item name = "Sri Lanka" iso_code="LKA">LKA</item>
+        <item name = "Spain" iso_code="ESP">ESP</item>
+        <item name = "United Kingdom" iso_code="GBR">GBR</item>
+        <item name = "United States Of America" iso_code="USA">USA</item>
+        <item name = "Wales" iso_code="GBR">GBR</item>
+        <item name = "Yemen" iso_code="YEM">YEM</item>
+        <item name = "Zambia" iso_code="ZMB">ZMB</item>
+        <item name = "Zimbabwe" iso_code="ZWE">ZWE</item>
 
     </string-array>
 </resources>

@@ -1,21 +1,11 @@
 package com.project.healthchat;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.BroadcastReceiver;
+import android.app.DownloadManager;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
-
+import android.text.format.DateFormat;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,138 +17,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-public class StatisticsActivity extends AppCompatActivity {
+public class HttpRequests {
 
-    private static final int WHITE =  000;
-    private static final int BLACK =  111;
-    private ImageView moveBack;
-
-    private TextView infectedTV;
-    private TextView deceasedTV;
-    private TextView recoveredTV;
-    private ImageView flag;
-
-    HttpRequests httpRequests;
-
-    Spinner spinner;
-
-    View parentView;
-
-
-    private BroadcastReceiver receiver = null;
-    boolean isConnected = true;
-    private boolean monitoringActivity = false;
-    String url ="https://hpb.health.gov.lk/api/get-current-statistical";
-    String internationalUrl = "https://covidapi.info/api/v1/country/";
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
-        final Context context = this;
-
-
-        moveBack = findViewById(R.id.statMoveBack);
-        infectedTV = findViewById(R.id.totalInfectedCount);
-        deceasedTV  = findViewById(R.id.totalDeathCount);
-        recoveredTV = findViewById(R.id.totalRecovered);
-
-        flag = findViewById(R.id.flag);
-
-        spinner = findViewById(R.id.spinner);
-
-        httpRequests = new HttpRequests();
-
-        spinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,getResources().getStringArray(R.array.list)));
-
-
-
-        parentView = findViewById(R.id.statisticsActivityLayout);
-
-        receiver = new Receiver(parentView);
-        broadcastIntent();
-
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                        String selectedItem = parent.getSelectedItem().toString();
-                        flag.setImageResource(CountryData.countryFlag[spinner.getSelectedItemPosition()]);
-                        Log.e("Selected item ",selectedItem);
-
-
-                        if(selectedItem.equals("Global")){
-                            Log.e("make request","making request");
-                            JsonObjectRequest globalObjectRequest   = httpRequests.makeSlHealthApiRequest(url,infectedTV,deceasedTV,recoveredTV,"global",context);
-
-                        }
-
-                        else if(selectedItem.equals("Sri Lanka")){
-                            JsonObjectRequest globalObjectRequest   = httpRequests.makeSlHealthApiRequest(url,infectedTV,deceasedTV,recoveredTV,"local",context);
-
-                        }
-
-                        else{
-                            String[] arraylist = getResources().getStringArray(R.array.list);
-                            String[] arrayListISO = getResources().getStringArray(R.array.iso_codes);
-                            for(int i=0;i<arraylist.length;i++ ){
-                                if(arraylist[i].equals(selectedItem)){
-                                    Log.e("Found match",arraylist[i]);
-                                    Log.e("Index", i+" ");
-                                    Log.e("ISO code",arrayListISO[i]);
-
-                                    String ISOCode = arrayListISO[i];
-                                    httpRequests.getInternationalCovidData(internationalUrl,ISOCode,infectedTV,deceasedTV,recoveredTV,context);
-
-
-
-                                }
-                            }
-
-                        }
-
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                JsonObjectRequest globalObjectRequest   = makeSlHealthApiRequest(infectedTV,deceasedTV,recoveredTV,"global");
-
-
-            }
-        });
-
-
-
-        moveBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent moveBackIntent = new Intent(StatisticsActivity.this,MainActivity.class);
-                startActivity(moveBackIntent);
-              finish();
-            }
-        });
-
-
-
-    }
-
-    public void broadcastIntent(){
-        registerReceiver(receiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(receiver);
-        Intent moveBackIntent  = new Intent(this,MainActivity.class);
-        startActivity(moveBackIntent);
-        finish();
-    }
-
-    private JsonObjectRequest  makeSlHealthApiRequest(final TextView totalInfected , final TextView totalDeath , final TextView totalRecovered, final String region){
+    public JsonObjectRequest makeSlHealthApiRequest(String url,final TextView totalInfected , final TextView totalDeath , final TextView totalRecovered, final String region,Context context){
         /*
         PARAM :
         totalInfected : TextView containing total infected count
@@ -171,7 +39,7 @@ public class StatisticsActivity extends AppCompatActivity {
         final DecimalFormat formatter = new DecimalFormat("#,###,###");
 
         final JSONObject[] finalResponse = new JSONObject[1];
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -228,7 +96,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
                         }else{
                             String globalCases = formatter.format(totalGlobalActiveCases);
-                        totalInfected.setText(globalCases);
+                            totalInfected.setText(globalCases);
                         }
 
                         if(totalGlobalDeaths > million){
@@ -282,9 +150,73 @@ public class StatisticsActivity extends AppCompatActivity {
 
     }
 
-    private float calculateFraction(long number , long divisor){
+
+
+    public float calculateFraction(long number , long divisor){
         long truncate =  (number * 10L + (divisor/2L))/divisor;
         float fraction  = (float) truncate * 0.10F;
         return fraction;
     }
+
+    public void getInternationalCovidData(String url,String ISOcode,final TextView totalInfected , final TextView totalDeath , final TextView totalRecovered, Context context){
+        final int million = 1000000;
+        final int hundredThousand  = 100000;
+        final DecimalFormat formatter = new DecimalFormat("#,###,###");
+
+        final JSONObject[] finalResponse = new JSONObject[1];
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+
+        String requestQuery = url+ISOcode+"/latest";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, requestQuery, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                String date = (String) DateFormat.format("yyyy-MM-dd",new java.util.Date());
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date myDate = dateFormat.parse(date);
+                    Date newDate = new Date(myDate.getTime() - 172800000L);
+                    String finalDate = dateFormat.format(newDate);
+                    Log.e("Date",finalDate);
+                    JSONObject  covidData = response.getJSONObject("result").getJSONObject(finalDate);
+                    int covidInternationalCases = covidData.getInt("confirmed");
+                    int covidInternationalDeaths = covidData.getInt("deaths");
+                    int covidInternationalRecovered = covidData.getInt("recovered");
+
+                    Log.i("Cases",covidInternationalCases+" ");
+                    Log.i("Deaths",covidInternationalDeaths+" ");
+                    Log.i("Recovered",covidInternationalRecovered+" ");
+
+                    totalInfected.setText(covidInternationalCases+" ");
+                    totalDeath.setText(covidInternationalDeaths + " " );
+                    totalRecovered.setText(covidInternationalRecovered+" ");
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+//                try{
+//                    JSONObject data = response.getJSONObject("result").getJSONObject()
+//                }
+                Log.e("Country response ", response.toString());
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Recieved error",error.toString());
+            }
+        });
+
+        requestQueue.add(jsonObjectRequest);
+
+    }
+
+
+
+
 }
