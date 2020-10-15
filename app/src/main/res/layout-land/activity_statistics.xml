@@ -318,7 +318,7 @@
 
 
     <LinearLayout
-        android:id="@+id/lineChartLayout"
+        android:id="@+id/statLineChart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -341,14 +341,14 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/graphikmedium"
-            android:text="Line Chart"
+            android:text="Bar Chart"
             android:textAlignment="center"
             android:textColor="#111111"
             android:textSize="25sp"
             />
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/statLineChart"
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/statBarChart"
             android:layout_width="match_parent"
             android:layout_height="300dp"/>
 

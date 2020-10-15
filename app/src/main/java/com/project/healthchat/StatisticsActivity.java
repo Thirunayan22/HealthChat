@@ -22,11 +22,26 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class StatisticsActivity extends AppCompatActivity {
 
@@ -39,10 +54,12 @@ public class StatisticsActivity extends AppCompatActivity {
     private TextView recoveredTV;
     private ImageView flag;
 
+    PieChart pieChart;
+    BarChart barchart;
+    LineChart lineChart;
+
     HttpRequests httpRequests;
-
     Spinner spinner;
-
     View parentView;
 
 
@@ -62,6 +79,105 @@ public class StatisticsActivity extends AppCompatActivity {
         infectedTV = findViewById(R.id.totalInfectedCount);
         deceasedTV  = findViewById(R.id.totalDeathCount);
         recoveredTV = findViewById(R.id.totalRecovered);
+
+
+        pieChart = findViewById(R.id.statPieChat);
+        barchart = findViewById(R.id.statBarChart);
+        lineChart = findViewById(R.id.statLineChart);
+
+        /*  ----------------------------------------Pie chart dummy data code ---------------------------------------------------------------------*/
+        ArrayList<PieEntry> covidCases = new ArrayList<PieEntry>();
+
+        covidCases.add(new PieEntry(945f,"2008"));
+        covidCases.add(new PieEntry(91345f,"2009"));
+        covidCases.add(new PieEntry(123f,"2010"));
+        covidCases.add(new PieEntry(94235f,"2011"));
+        covidCases.add(new PieEntry(923f,"2012"));
+        covidCases.add(new PieEntry(9453f,"2013"));
+
+
+
+        PieDataSet dataSet = new PieDataSet(covidCases,"Number of cases");
+
+        PieData data  = new PieData(dataSet);
+        data.setDrawValues(false);
+        pieChart.setData(data);
+        pieChart.setDrawEntryLabels(false);
+
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        pieChart.animateXY(1000, 1000);
+
+//        ArrayList months = new ArrayList();
+//        months.add("Januaray");
+//        months.add("February");
+//        months.add("March");
+//        months.add("April");
+//        months.add("May");
+//        months.add("June");
+//        months.add("July");
+//        months.add("August");
+//        months.add("September");
+//
+//        PieData data =  new PieData(months,dataSet);
+
+        /*  ----------------------------------------Pie chart dummy data code ---------------------------------------------------------------------*/
+
+        /*  ----------------------------------------Bar chart dummy data code ---------------------------------------------------------------------*/
+
+    ArrayList<BarEntry> barEntries = new ArrayList<BarEntry>();
+    barEntries.add(new BarEntry(945f, 0));
+    barEntries.add(new BarEntry(1040f, 1));
+    barEntries.add(new BarEntry(1133f, 2));
+    barEntries.add(new BarEntry(1240f, 3));
+    barEntries.add(new BarEntry(1369f, 4));
+    barEntries.add(new BarEntry(1487f, 5));
+    barEntries.add(new BarEntry(1501f, 6));
+
+    ArrayList<String> year = new ArrayList<String>();
+
+    year.add("2008");
+    year.add("2009");
+    year.add("2010");
+    year.add("2011");
+    year.add("2012");
+    year.add("2013");
+    year.add("2014");
+
+    BarDataSet barDataSet = new BarDataSet(barEntries,"Corona Cases");
+    barchart.animateY(2000);
+    BarData barData = new BarData(barDataSet);
+    barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+    barchart.setData(barData);
+
+    /*  ----------------------------------------Bar chart dummy data code ---------------------------------------------------------------------*/
+
+        /*  ----------------------------------------Line chart dummy data code ---------------------------------------------------------------------*/
+
+        ArrayList<Entry> pcrTesting  = new ArrayList<Entry>();
+        ArrayList<Entry> deaths = new ArrayList<Entry>();
+
+        pcrTesting.add(new Entry(0f,100000f));
+        pcrTesting.add(new Entry(1f,140000f));
+        pcrTesting.add(new Entry(2f,143400f));
+        pcrTesting.add(new Entry(3f,243400f));
+
+        deaths.add(new Entry(0f,1000f));
+        deaths.add(new Entry(1f,13432f));
+        deaths.add(new Entry(2f,34234f));
+        deaths.add(new Entry(3f,23553f));
+
+        LineDataSet lineDataSet1 = new LineDataSet(pcrTesting,"PCR Testing");
+        LineDataSet lineDataSet2 = new LineDataSet(deaths,"Deaths");
+
+        ArrayList<ILineDataSet> lineDataSets = new ArrayList<ILineDataSet>();
+        lineDataSets.add(lineDataSet1);
+        lineDataSets.add(lineDataSet2);
+
+        LineData lineData  = new LineData(lineDataSets);
+        lineChart.setData(lineData);
+        lineChart.invalidate();
+
+        /*  ----------------------------------------Line chart dummy data code ---------------------------------------------------------------------*/
 
         flag = findViewById(R.id.flag);
 
