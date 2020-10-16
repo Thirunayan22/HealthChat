@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,9 @@ import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -40,6 +44,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -68,6 +73,7 @@ public class StatisticsActivity extends AppCompatActivity {
     private boolean monitoringActivity = false;
     String url ="https://hpb.health.gov.lk/api/get-current-statistical";
     String internationalUrl = "https://covidapi.info/api/v1/country/";
+    public ArrayList<PieEntry> pieEntries = new ArrayList<PieEntry>() ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,40 +91,27 @@ public class StatisticsActivity extends AppCompatActivity {
         barchart = findViewById(R.id.statBarChart);
         lineChart = findViewById(R.id.statLineChart);
 
-        /*  ----------------------------------------Pie chart dummy data code ---------------------------------------------------------------------*/
-        ArrayList<PieEntry> covidCases = new ArrayList<PieEntry>();
-
-        covidCases.add(new PieEntry(945f,"2008"));
-        covidCases.add(new PieEntry(91345f,"2009"));
-        covidCases.add(new PieEntry(123f,"2010"));
-        covidCases.add(new PieEntry(94235f,"2011"));
-        covidCases.add(new PieEntry(923f,"2012"));
-        covidCases.add(new PieEntry(9453f,"2013"));
-
-
-
-        PieDataSet dataSet = new PieDataSet(covidCases,"Number of cases");
-
-        PieData data  = new PieData(dataSet);
-        data.setDrawValues(false);
-        pieChart.setData(data);
-        pieChart.setDrawEntryLabels(false);
-
-        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-        pieChart.animateXY(1000, 1000);
-
-//        ArrayList months = new ArrayList();
-//        months.add("Januaray");
-//        months.add("February");
-//        months.add("March");
-//        months.add("April");
-//        months.add("May");
-//        months.add("June");
-//        months.add("July");
-//        months.add("August");
-//        months.add("September");
+//        /*  ----------------------------------------Pie chart dummy data code ---------------------------------------------------------------------*/
+//        //TODO
+//        ArrayList<PieEntry> covidCases = new ArrayList<PieEntry>();
 //
-//        PieData data =  new PieData(months,dataSet);
+//        covidCases.add(new PieEntry(945f,"2008"));
+//        covidCases.add(new PieEntry(91345f,"2009"));
+//        covidCases.add(new PieEntry(123f,"2010"));
+//        covidCases.add(new PieEntry(94235f,"2011"));
+//        covidCases.add(new PieEntry(923f,"2012"));
+//        covidCases.add(new PieEntry(9453f,"2013"));
+//
+//
+//
+//        PieDataSet dataSet = new PieDataSet(covidCases,"Number of cases");
+//
+//        PieData data  = new PieData(dataSet);
+//        data.setDrawValues(false);
+//        pieChart.setData(data);
+//
+//        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+//        pieChart.animateXY(1000, 1000);
 
         /*  ----------------------------------------Pie chart dummy data code ---------------------------------------------------------------------*/
 
@@ -203,15 +196,24 @@ public class StatisticsActivity extends AppCompatActivity {
                         flag.setImageResource(CountryData.countryFlag[spinner.getSelectedItemPosition()]);
                         Log.e("Selected item ",selectedItem);
 
-
                         if(selectedItem.equals("Global")){
                             Log.e("make request","making request");
-                            JsonObjectRequest globalObjectRequest   = httpRequests.makeSlHealthApiRequest(url,infectedTV,deceasedTV,recoveredTV,"global",context);
+                            JsonObjectRequest  globalObjectRequest2   = makeSlHealthApiRequest(url,infectedTV,deceasedTV,recoveredTV,"global");
+//
+
 
                         }
 
                         else if(selectedItem.equals("Sri Lanka")){
-                            JsonObjectRequest globalObjectRequest   = httpRequests.makeSlHealthApiRequest(url,infectedTV,deceasedTV,recoveredTV,"local",context);
+
+                            JsonObjectRequest globalObjectRequest3   = makeSlHealthApiRequest(url,infectedTV,deceasedTV,recoveredTV,"local");
+//                            PieDataSet pieDataSetLocal = new PieDataSet(pieEntries,"Covid Progression");
+//                            PieData pieDataLocal = new PieData(pieDataSetLocal);
+//                            pieDataLocal.setDrawValues(false);
+//                            pieChart.setData(pieDataLocal);
+//
+//                            pieDataSetLocal.setColors(ColorTemplate.COLORFUL_COLORS);
+//                            pieChart.animateXY(1000,1000);
 
                         }
 
@@ -224,8 +226,9 @@ public class StatisticsActivity extends AppCompatActivity {
                                     Log.e("Index", i+" ");
                                     Log.e("ISO code",arrayListISO[i]);
 
+
                                     String ISOCode = arrayListISO[i];
-                                    httpRequests.getInternationalCovidData(internationalUrl,ISOCode,infectedTV,deceasedTV,recoveredTV,context);
+                                   ArrayList<PieEntry> intRequestResponse =  httpRequests.getInternationalCovidData(pieChart,internationalUrl,ISOCode,infectedTV,deceasedTV,recoveredTV,context);
 
 
 
@@ -240,7 +243,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                JsonObjectRequest globalObjectRequest   = makeSlHealthApiRequest(infectedTV,deceasedTV,recoveredTV,"global");
+                JsonObjectRequest globalObjectRequest   = makeSlHealthApiRequest(url,infectedTV,deceasedTV,recoveredTV,"global");
 
 
             }
@@ -274,7 +277,7 @@ public class StatisticsActivity extends AppCompatActivity {
         finish();
     }
 
-    private JsonObjectRequest  makeSlHealthApiRequest(final TextView totalInfected , final TextView totalDeath , final TextView totalRecovered, final String region){
+    private JsonObjectRequest  makeSlHealthApiRequest(String url,final TextView totalInfected , final TextView totalDeath , final TextView totalRecovered, final String region){
         /*
         PARAM :
         totalInfected : TextView containing total infected count
@@ -288,6 +291,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         final JSONObject[] finalResponse = new JSONObject[1];
         RequestQueue requestQueue = Volley.newRequestQueue(this);
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -303,7 +307,29 @@ public class StatisticsActivity extends AppCompatActivity {
                     int totalGlobalRecoveries = data.getInt("global_recovered");
                     int totalGlobalActiveCases = data.getInt("global_total_cases");
 
+
                     if(region == "local") {
+                        ArrayList<PieEntry> covidCasesLocal = new ArrayList<PieEntry>();
+
+
+                        covidCasesLocal.add(new PieEntry(totalLocalDeaths,"Local Deaths"));
+                        covidCasesLocal.add(new PieEntry(totalLocalActiveCases,"Local Active Cases"));
+                        covidCasesLocal.add(new PieEntry(totalLocalRecoveries,"Local Recoveries"));
+
+                        PieDataSet pieDataSetLocal= new PieDataSet(covidCasesLocal ,"Covid Progression Global");
+                        PieData pieDataLocal = new PieData(pieDataSetLocal);
+                        pieDataLocal.setDrawValues(false);
+                        pieChart.setData(pieDataLocal);
+                        pieChart.setDrawEntryLabels(false);
+                        pieChart.setDrawEntryLabels(true);
+                        pieChart.setEntryLabelColor(Color.GRAY);
+
+
+                        pieDataSetLocal.setColors(ColorTemplate.COLORFUL_COLORS);
+                        pieChart.animateXY(1000,1000);
+
+
+                        Log.e("Local Value",covidCasesLocal.toString());
 
 
                         if((totalLocalDeaths > million)){
@@ -337,6 +363,29 @@ public class StatisticsActivity extends AppCompatActivity {
 
                     }
                     else if(region == "global"){
+                        Log.e("Moved : " , "into global");
+                        ArrayList<PieEntry> covidCasesGlobal = new ArrayList<PieEntry>();
+
+                        covidCasesGlobal.add(new PieEntry(totalGlobalDeaths,"Global Deaths"));
+                        covidCasesGlobal.add(new PieEntry(totalGlobalActiveCases,"Global Active Cases"));
+                        covidCasesGlobal.add(new PieEntry(totalGlobalRecoveries,"Global Recoveries"));
+                        pieChart.setDrawEntryLabels(true);
+                        pieChart.setEntryLabelColor(Color.GRAY);
+
+
+                        PieDataSet pieDataSetGlobal = new PieDataSet(covidCasesGlobal ,"");
+                        PieData pieDataLocal = new PieData(pieDataSetGlobal);
+                        pieDataLocal.setDrawValues(false);
+
+                        pieChart.setData(pieDataLocal);
+
+                        Legend legend = pieChart.getLegend();
+                        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+                        legend.setEnabled(true);
+                        pieDataSetGlobal.setColors(ColorTemplate.COLORFUL_COLORS);
+                        pieChart.animateXY(1000,1000);
+
+                        Log.e("Covid Global",covidCasesGlobal.toString());
 
                         if(totalGlobalActiveCases > million ){
                             String globalCasesFraction  = calculateFraction(totalGlobalActiveCases,million) + "M";

@@ -263,7 +263,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/graphikmedium"
-            android:text="Pie Chart"
+            android:text="Deaths and Spread"
             android:textAlignment="center"
             android:textColor="#111111"
             android:textSize="25sp"
@@ -272,7 +272,7 @@
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/statPieChat"
             android:layout_width="match_parent"
-            android:layout_height="300dp"/>
+            android:layout_height="400dp"/>
 
 
     </LinearLayout>
@@ -350,6 +350,8 @@
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/statLineChart"
             android:layout_width="match_parent"
+            android:layout_marginBottom="10dp"
+            android:paddingBottom="5dp"
             android:layout_height="300dp"/>
 
 
