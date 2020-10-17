@@ -13,12 +13,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -260,6 +266,98 @@ public class HttpRequests {
 
         requestQueue.add(jsonObjectRequest);
         return returnData;
+
+    }
+
+    public JsonObjectRequest makeTimeSeriesRequest(final LineChart lineChart, String url, String countryISOcode, String startDate, String endDate, Context context){
+
+        final RequestQueue requestQueue = Volley.newRequestQueue(context);
+        final String reqUrl = url + countryISOcode + "/timeseries/"  + startDate + "/" + endDate;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, reqUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.e("Returned time sereis ", response.toString());
+
+                    JSONArray result = response.getJSONArray("result");
+                    JSONObject cases = result.getJSONObject(0);
+                    int covidCases = cases.getInt("confirmed");
+                    int covdDeaths = cases.getInt("deaths");
+                    int covidRecovered = cases.getInt("recovered");
+
+                    ArrayList<Entry> covidCasesSeries = new ArrayList<Entry>();
+                    ArrayList<Entry> covidDeathsSeries = new ArrayList<Entry>();
+                    ArrayList<Entry> covidRecoveredSeries = new ArrayList<Entry>();
+
+
+                    Log.e("Global JSONObject len" , cases.length()+"");
+                    Log.e("Global JSONArray len" , result.length()+"");
+
+                    for(int i=0;i<result.length();i++){
+
+                        JSONObject seriesDataObject = result.getJSONObject(i);
+
+                        covidCasesSeries.add(new Entry(i,seriesDataObject.getInt("confirmed")));
+                        covidDeathsSeries.add(new Entry(i,seriesDataObject.getInt("deaths")));
+                        covidRecoveredSeries.add(new Entry(i,seriesDataObject.getInt("recovered")));
+
+
+                    }
+
+                    LineDataSet covidCasesDataset = new LineDataSet(covidCasesSeries,"Covid Cases");
+                    LineDataSet covidDeathsDataset = new LineDataSet(covidDeathsSeries,"Covid Deaths");
+                    LineDataSet covidRecoveriesDataset = new LineDataSet(covidRecoveredSeries,"Covid Recoveries");
+
+                    ArrayList<ILineDataSet> lineDataSets = new ArrayList<ILineDataSet>();
+
+                    covidCasesDataset.setCircleColor(Color.RED);
+                    covidCasesDataset.setColor(Color.RED);
+                    covidCasesDataset.setDrawValues(false);
+
+                    covidDeathsDataset.setCircleColor(Color.GREEN);
+                    covidDeathsDataset.setColor(Color.GREEN);
+                    covidDeathsDataset.setDrawValues(false);
+
+
+                    covidRecoveriesDataset.setCircleColor(Color.GRAY);
+                    covidRecoveriesDataset.setColor(Color.GRAY);
+                    covidRecoveriesDataset.setDrawValues(false);
+
+
+
+                    lineDataSets.add(covidCasesDataset);
+                    lineDataSets.add(covidDeathsDataset);
+                    lineDataSets.add(covidRecoveriesDataset);
+
+                    LineData lineData = new LineData(lineDataSets);
+                    lineChart.getAxisRight().setDrawTopYLabelEntry(false);
+                    lineChart.getXAxis().setDrawGridLinesBehindData(false);
+
+                    lineChart.invalidate();
+                    lineChart.getXAxis().setDrawAxisLine(false);
+                    lineChart.setData(lineData);
+                    lineChart.animate();
+
+
+
+                    Log.e("COVID CASES SERIES", covidCasesSeries.toString());
+                    Log.e("COVID DEATHS SERIES",covidDeathsSeries.toString());
+                    Log.e("COVID RECOVERED SERIES", covidRecoveredSeries.toString());
+
+                } catch (JSONException e) {
+                    Log.e("Time series JSON error", e.toString());
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Time Series error",error.toString());
+            }
+        });
+
+        requestQueue.add(jsonObjectRequest);
+        return jsonObjectRequest;
 
     }
 

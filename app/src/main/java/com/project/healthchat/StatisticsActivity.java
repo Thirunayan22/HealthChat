@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -43,6 +44,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.lang.reflect.Array;
 import java.text.DecimalFormat;
@@ -73,6 +75,7 @@ public class StatisticsActivity extends AppCompatActivity {
     private boolean monitoringActivity = false;
     String url ="https://hpb.health.gov.lk/api/get-current-statistical";
     String internationalUrl = "https://covidapi.info/api/v1/country/";
+    String TIMESERIESURL = "https://covidapi.info/api/v1/country/";
     public ArrayList<PieEntry> pieEntries = new ArrayList<PieEntry>() ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,11 +123,11 @@ public class StatisticsActivity extends AppCompatActivity {
     ArrayList<BarEntry> barEntries = new ArrayList<BarEntry>();
     barEntries.add(new BarEntry(945f, 0));
     barEntries.add(new BarEntry(1040f, 1));
-    barEntries.add(new BarEntry(1133f, 2));
-    barEntries.add(new BarEntry(1240f, 3));
-    barEntries.add(new BarEntry(1369f, 4));
-    barEntries.add(new BarEntry(1487f, 5));
-    barEntries.add(new BarEntry(1501f, 6));
+    barEntries.add(new BarEntry(1043f, 2));
+    barEntries.add(new BarEntry(1044f, 3));
+    barEntries.add(new BarEntry(1069f, 4));
+    barEntries.add(new BarEntry(1087f, 5));
+    barEntries.add(new BarEntry(1001f, 6));
 
     ArrayList<String> year = new ArrayList<String>();
 
@@ -149,15 +152,15 @@ public class StatisticsActivity extends AppCompatActivity {
         ArrayList<Entry> pcrTesting  = new ArrayList<Entry>();
         ArrayList<Entry> deaths = new ArrayList<Entry>();
 
-        pcrTesting.add(new Entry(0f,100000f));
-        pcrTesting.add(new Entry(1f,140000f));
-        pcrTesting.add(new Entry(2f,143400f));
-        pcrTesting.add(new Entry(3f,243400f));
+        pcrTesting.add(new Entry(0,100000));
+        pcrTesting.add(new Entry(1,140000));
+        pcrTesting.add(new Entry(2,143400));
+        pcrTesting.add(new Entry(3,243400));
 
-        deaths.add(new Entry(0f,1000f));
-        deaths.add(new Entry(1f,13432f));
-        deaths.add(new Entry(2f,34234f));
-        deaths.add(new Entry(3f,23553f));
+        deaths.add(new Entry(0,1000));
+        deaths.add(new Entry(1,13432));
+        deaths.add(new Entry(2,34234));
+        deaths.add(new Entry(3,23553));
 
         LineDataSet lineDataSet1 = new LineDataSet(pcrTesting,"PCR Testing");
         LineDataSet lineDataSet2 = new LineDataSet(deaths,"Deaths");
@@ -165,10 +168,10 @@ public class StatisticsActivity extends AppCompatActivity {
         ArrayList<ILineDataSet> lineDataSets = new ArrayList<ILineDataSet>();
         lineDataSets.add(lineDataSet1);
         lineDataSets.add(lineDataSet2);
-
         LineData lineData  = new LineData(lineDataSets);
         lineChart.setData(lineData);
         lineChart.invalidate();
+        lineChart.animate();
 
         /*  ----------------------------------------Line chart dummy data code ---------------------------------------------------------------------*/
 
@@ -207,13 +210,8 @@ public class StatisticsActivity extends AppCompatActivity {
                         else if(selectedItem.equals("Sri Lanka")){
 
                             JsonObjectRequest globalObjectRequest3   = makeSlHealthApiRequest(url,infectedTV,deceasedTV,recoveredTV,"local");
-//                            PieDataSet pieDataSetLocal = new PieDataSet(pieEntries,"Covid Progression");
-//                            PieData pieDataLocal = new PieData(pieDataSetLocal);
-//                            pieDataLocal.setDrawValues(false);
-//                            pieChart.setData(pieDataLocal);
-//
-//                            pieDataSetLocal.setColors(ColorTemplate.COLORFUL_COLORS);
-//                            pieChart.animateXY(1000,1000);
+                            JsonObjectRequest jsonObjectRequestTS = httpRequests.makeTimeSeriesRequest(lineChart,TIMESERIESURL,"LKA","2020-10-1","2020-10-15",context);
+
 
                         }
 
@@ -226,11 +224,10 @@ public class StatisticsActivity extends AppCompatActivity {
                                     Log.e("Index", i+" ");
                                     Log.e("ISO code",arrayListISO[i]);
 
-
                                     String ISOCode = arrayListISO[i];
                                    ArrayList<PieEntry> intRequestResponse =  httpRequests.getInternationalCovidData(pieChart,internationalUrl,ISOCode,infectedTV,deceasedTV,recoveredTV,context);
 
-
+                                    JsonObjectRequest jsonObjectRequestTS = httpRequests.makeTimeSeriesRequest(lineChart,TIMESERIESURL,ISOCode,"2020-10-1","2020-10-15",context);
 
                                 }
                             }
