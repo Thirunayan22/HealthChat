@@ -120,9 +120,12 @@ public class HttpRequests {
 
                         if(totalGlobalActiveCases > million ){
                             String globalCasesFraction  = calculateFraction(totalGlobalActiveCases,million) + "M";
+                            Log.e("Setted global fraction",globalCasesFraction);
                             totalInfected.setText(globalCasesFraction);
 
                         }else{
+                            Log.e("Million","million");
+
                             String globalCases = formatter.format(totalGlobalActiveCases);
                             totalInfected.setText(globalCases);
                         }
@@ -191,7 +194,7 @@ public class HttpRequests {
         return fraction;
     }
 
-    public ArrayList<PieEntry> getInternationalCovidData(final PieChart pieChart,String url, String ISOcode, final TextView totalInfected , final TextView totalDeath , final TextView totalRecovered, Context context){
+    public ArrayList<PieEntry> getInternationalCovidData(final PieChart pieChart, final String url, String ISOcode, final TextView totalInfected , final TextView totalDeath , final TextView totalRecovered, Context context){
         final int million = 1000000;
         final int hundredThousand  = 100000;
         final DecimalFormat formatter = new DecimalFormat("#,###,###");
@@ -201,7 +204,7 @@ public class HttpRequests {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
 
-        String requestQuery = url+ISOcode+"/latest";
+        final String requestQuery = url+ISOcode+"/latest";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, requestQuery, null, new Response.Listener<JSONObject>() {
             @Override
@@ -211,13 +214,19 @@ public class HttpRequests {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 try {
                     Date myDate = dateFormat.parse(date);
-                    Date newDate = new Date(myDate.getTime() - 172800000L);
+                    Date newDate = new Date(myDate.getTime() - 86400000L);
                     String finalDate = dateFormat.format(newDate);
                     Log.e("Date",finalDate);
                     JSONObject  covidData = response.getJSONObject("result").getJSONObject(finalDate);
                     int covidInternationalCases = covidData.getInt("confirmed");
                     int covidInternationalDeaths = covidData.getInt("deaths");
                     int covidInternationalRecovered = covidData.getInt("recovered");
+
+                    Log.e("Added Data","Data");
+
+                    totalInfected.setText(covidInternationalCases+" ");
+                    totalDeath.setText(covidInternationalDeaths + " " );
+                    totalRecovered.setText(covidInternationalRecovered+" ");
 
                     ArrayList<PieEntry> covidCasesLocal = new ArrayList<PieEntry>();
 
@@ -241,18 +250,18 @@ public class HttpRequests {
                     Log.i("Deaths",covidInternationalDeaths+" ");
                     Log.i("Recovered",covidInternationalRecovered+" ");
 
-                    totalInfected.setText(covidInternationalCases+" ");
-                    totalDeath.setText(covidInternationalDeaths + " " );
-                    totalRecovered.setText(covidInternationalRecovered+" ");
+
 
                 } catch (ParseException e) {
+                    Log.e("Parse Exception",e.toString());
                     e.printStackTrace();
                 } catch (JSONException e) {
+                    Log.e("Url",requestQuery);
+                    Log.e("JSON Exception",e.toString());
+
                     e.printStackTrace();
                 }
-//                try{
-//                    JSONObject data = response.getJSONObject("result").getJSONObject()
-//                }
+//
                 Log.e("Country response ", response.toString());
 
 

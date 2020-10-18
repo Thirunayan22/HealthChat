@@ -385,12 +385,15 @@ public class StatisticsActivity extends AppCompatActivity {
                         Log.e("Covid Global",covidCasesGlobal.toString());
 
                         if(totalGlobalActiveCases > million ){
-                            String globalCasesFraction  = calculateFraction(totalGlobalActiveCases,million) + "M";
+                            String globalCasesFraction  = Math.round(calculateFraction(totalGlobalActiveCases,million)*10)/10 + "M";
                             totalInfected.setText(globalCasesFraction);
+                            Log.e("Setted value million",globalCasesFraction);
 
                         }else{
                             String globalCases = formatter.format(totalGlobalActiveCases);
                         totalInfected.setText(globalCases);
+                            Log.e("Setted value nonmillion",globalCases);
+
                         }
 
                         if(totalGlobalDeaths > million){
